@@ -1,0 +1,167 @@
+
+create table tipo (
+id int primary key AUTO_INCREMENT	,
+nombre varchar(100),
+estado varchar(15)
+);
+
+
+
+create table cliente(
+id int primary key AUTO_INCREMENT ,
+nombres varchar(100),
+apellidos varchar(100),
+login varchar(80),
+password varchar(50),
+empresa varchar(100),
+telefono int,
+direccion varchar(100),
+email varchar(100),
+estado varchar(50));
+
+create table ubicacion(
+id int primary key AUTO_INCREMENT	,
+latitud varchar(100),
+longitud varchar(100),
+referencia varchar(100),
+url varchar(100));
+
+create table repartidor(
+id int primary key AUTO_INCREMENT,
+nombre varchar(100),
+apellidos varchar(100),
+login varchar(80),
+password varchar(50),
+cedulaID int,
+telefono int,
+direccion varchar(100),
+estado varchar(15));
+
+create table categoria(
+id int primary key AUTO_INCREMENT,
+nombre varchar(100),
+estado varchar(15)
+);
+
+create table mesa(
+id   int primary key AUTO_INCREMENT	,
+descripcion varchar(100),
+capacidad int,
+ubicacion varchar(100),
+estado varchar(10));
+
+create table menu(
+id int primary key AUTO_INCREMENT	,
+fecha date);
+
+create table vehiculo(
+id int primary key AUTO_INCREMENT	,
+tipoVehiculo varchar(100),
+caracteristicas varchar(200),
+placa varchar(20),
+idRepartidor int,
+estado varchar(15),
+foreign key(idRepartidor)references repartidor(id));
+
+create table reserva(
+id int primary key AUTO_INCREMENT,
+comensales varchar(100),
+telefono int,
+fecha date,
+hora time,
+observacion varchar(200),
+estado varchar(10),
+idCliente int,
+foreign key(idCliente)references cliente(id));
+
+create table producto(
+id int primary key AUTO_INCREMENT,
+nombre varchar(100),
+descripcion varchar(100),
+foto varchar(50),
+precio float,
+estado varchar(10),
+idCategoria int,
+foreign key(idCategoria)references categoria(id));
+
+create table precios(
+id  int primary key AUTO_INCREMENT,
+precio float, 
+fecha date,
+idProducto int,
+foreign key(idProducto)references producto(id));
+
+create table usuario(
+id int primary key AUTO_INCREMENT	,
+nombre varchar(100),
+apellidos varchar(100),
+login varchar(100),
+password varchar(50),
+estado varchar(15),
+idTipo int,
+foreign key(idTipo)references tipo(id));
+
+create table bitacora(
+id int primary key AUTO_INCREMENT	,
+fecha date,
+hora time,
+tabla varchar(100),
+transaccion varchar(100),
+idUsusario int,
+foreign key(idUsusario )references usuario(id)
+);
+
+create table pedido(
+id int primary key AUTO_INCREMENT,
+fecha date,
+fechaEntrega date,
+horaEntrega time,
+glosa varchar(200),
+montoTotal float,
+estado varchar(50),
+idRepartidor int,
+idUbicacion int,
+idCliente int,
+idUsuario int,
+foreign key(idRepartidor)references repartidor(id),
+foreign key(idUbicacion)references ubicacion(id),
+foreign key(idCliente)references cliente(id),
+foreign key(idUsuario)references usuario(id));
+
+create table OrdenAtencion(
+id int primary key AUTO_INCREMENT	,
+fecha date,
+montoTotal float,
+estado varchar(50),
+idUsuario int,
+idCliente int,
+idMesa int,
+foreign key(idUsuario)references usuario(id),
+foreign key(idCliente)references cliente(id),
+foreign key(idMesa)references mesa(id));
+
+create table detallepedido(
+cantidad int,
+total float,
+idPedido int,
+idProducto int,
+primary key(idPedido,idProducto),
+foreign key(idPedido)references pedido(id),
+foreign key(idProducto)references producto(id));
+
+create table detalleorden(
+cantidad int,
+total float,
+idOrdenAtencion int,
+idProducto int,
+primary key(idOrdenAtencion,idProducto),
+foreign key(idOrdenAtencion)references OrdenAtencion(id),
+foreign key(idProducto)references Producto(id));
+
+create table ListaMenu(
+estado varchar(50),
+idMenu int,
+idProducto int,
+primary key(idMenu,idProducto),
+foreign key(idMenu)references Menu(id),
+foreign key(idProducto)references Producto(id));
